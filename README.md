@@ -20,8 +20,8 @@ Dibawah ini adalah panduan instalasi dan cara untuk menjalankan website MitraFlo
    
    git clone https://github.com/intanmr/projekmitra-flora.git
    
-   Setelah clone selesai, masuk ke folder projek yang telah dibuat yaitu dengan cd projekmitra
-   flora. Pastikan jika sudah berisi file seperti artisan, composer.json, app, routes, dll. Jika
+   Setelah clone selesai, masuk ke folder projek yang telah dibuat yaitu dengan cd projekmitra-flora. Pastikan jika sudah berisi file seperti artisan,
+   composer.json, app, routes, dll. Jika
    sudah terdapat file tersebut maka folder projek sudah benar
 
    
