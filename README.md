@@ -147,4 +147,48 @@ Dibawah ini adalah panduan instalasi dan cara untuk menjalankan website MitraFlo
 26. Membuka Website di Browser
     
     Akses http://127.0.0.1:8000 di browser, apabila semua langkah sudah benar maka projek mitra
-    flora akan tampil 
+    flora akan tampil
+
+A. Cara untuk Login Admin 
+
+Gunakan akun admin sebagai berikut : 
+
+Email : admin.mitraflora@gmail.com 
+
+Password : password123
+
+Setelah login sebagai admin, pengguna dapat mengakses fitur : 
+
+- Dashboard admin
+- Kelola produk
+- Tambah produk
+- Edit produk
+- Hapus produk
+- Kelola pesanan
+- Ubah status pesanan
+- Hapus pesanan
+- Live search produk
+- Live search pesanan
+
+B. Cara untuk Login Customer
+
+- Buka halaman register.
+- Isi nama lengkap.
+- Isi email.
+- Isi password.
+- Isi konfirmasi password.
+- Klik register.
+- Login menggunakan akun customer yang sudah dibuat.
+
+Setelah login sebagai customer, pengguna dapat mengakses fitur:
+
+- Dashboard customer
+- Katalog produk
+- Detail produk
+- Checkout atau pemesanan produk
+- Upload bukti pembayaran
+- Riwayat pesanan
+- Live search katalog produk
+- Live search riwayat pesanan
+- Mode terang dan mode gelap
+
