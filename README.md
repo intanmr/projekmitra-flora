@@ -20,9 +20,12 @@ Dibawah ini adalah panduan instalasi dan cara untuk menjalankan website MitraFlo
    
    git clone https://github.com/intanmr/projekmitra-flora.git
    
-   Setelah clone selesai, masuk ke folder projek yang telah dibuat yaitu dengan cd projekmitra-flora. Pastikan jika sudah berisi file seperti artisan,
-   composer.json, app, routes, dll. Jika
-   sudah terdapat file tersebut maka folder projek sudah benar
+   Setelah clone selesai, masuk ke folder projek yang telah dibuat yaitu dengan
+   
+   cd projekmitra-flora.
+
+   Pastikan jika sudah berisi file seperti artisan, composer.json, app, routes, dll. Jika sudah
+   terdapat file tersebut maka folder projek sudah benar
 
    
 3. Install Dependency Laravel
@@ -45,7 +48,8 @@ Dibawah ini adalah panduan instalasi dan cara untuk menjalankan website MitraFlo
    
 7. Membuat file .env
    
-   Untuk membuat file .env dibuat dari file .env.example. Untuk membuatnya jalankan perintah :
+   Laravel membutuhkan file .env untuk file konfigurasi aplikasi. Untuk membuatnya jalankan
+   perintah :
 
    copy .env.example .env
 
@@ -54,7 +58,7 @@ Dibawah ini adalah panduan instalasi dan cara untuk menjalankan website MitraFlo
    
 9. Melakukan konfigurasi pada file .env
     
-   Atur pada .env seperti ini :
+   Buka file .env, lalu sesuaikan bagian berikut :
    
    APP_NAME="Mitra Flora"
    
@@ -93,16 +97,19 @@ Dibawah ini adalah panduan instalasi dan cara untuk menjalankan website MitraFlo
     php artisan key:generate
 
     Ini digunakan untuk membuat APP_KEY pada file .env, jikan berhasil akan muncul pesan
+    
     Application key set successfully
 
     
 13. Membuat Database di phpMyAdmin
     
-    buka browser untuk masuk ke phpMyAdmin menggunakan : http://localhost/phpmyadmin
+    Buka browser untuk masuk ke phpMyAdmin menggunakan :
+
+    http://localhost/phpmyadmin
 
     Setelah phpMyAdmin terbuka buat database barunya dengan klik menu Database, lalu pada kolom
     nama database isi siak_db. Setelah itu klik tombol Create. Pastikan jika database siak_db
-    sudah berhasil muncul di daftar databasenya
+    sudah berhasil muncul di daftar databasenya.
 
     
 16. Migrasi Database dan Seeder
@@ -134,7 +141,8 @@ Dibawah ini adalah panduan instalasi dan cara untuk menjalankan website MitraFlo
 
     npm run dev
 
-    Hal ini digunakan untuk menjalankan perintah frontendnya
+    Hal ini digunakan untuk menjalankan perintah frontendnya. Biarkan terminal ini tetap berjalan.
+    Setelah itu, buka Command Prompt baru untuk menjalankan server Laravel.
 
     
 24. Menjalankan Server Laravel
@@ -147,13 +155,34 @@ Dibawah ini adalah panduan instalasi dan cara untuk menjalankan website MitraFlo
 
     php artisan serve
 
-    lalu buka alamat tersebut pada browser
+    jika berhasil akan mucul alamat sebagai berikut :
+
+    http://127.0.0.1:8000
+
+    Buka alamat tersebut pada browser
 
 
 26. Membuka Website di Browser
     
     Akses http://127.0.0.1:8000 di browser, apabila semua langkah sudah benar maka projek mitra
     flora akan tampil
+
+Dari penjelasan diatas berikut ini adalah urutan perintah yang digunakan untuk intalasi tadi : 
+- cd C:\laragon\www
+- mkdir tugas-pweb
+- cd tugas-pweb
+- git clone https://github.com/intanmr/projekmitra-flora.git
+- cd projekmitra-flora
+- composer install
+- npm install
+- copy .env.example .env
+- php artisan key:generate
+- php artisan storage:link
+- php artisan optimize:clear
+- npm run dev
+buka command prompt baru lalu
+- cd C:\laragon\www\tugas-pweb\projekmitra-flora
+- php artisan serve
 
 A. Cara untuk Login Admin 
 
