@@ -11,18 +11,21 @@ use Illuminate\Validation\ValidationException;
 
 class LoginRequest extends FormRequest
 {
+    //untuk mengizinkan request login diproses
     public function authorize(): bool
     {
         return true;
     }
-
+    //untuk mengubah email menjadi huruf kecil agar konsisten 
     protected function prepareForValidation(): void
     {
         $this->merge([
             'email' => strtolower($this->email ?? ''),
         ]);
     }
-
+    //aturan validasi untuk login
+    //email harus diisi, berupa string, format email valid, dan harus berakhiran @gmail.com
+    //password harus diisi, berupa string, dan minimal 8 karakter
     public function rules(): array
     {
         return [
@@ -42,10 +45,14 @@ class LoginRequest extends FormRequest
         ];
     }
 
+    //proses autentikasi login
+    //sistem rate limiter, membatasi jumlah percobaan login yang gagal dalam waktu tertentu
     public function authenticate(): void
     {
+        //mengecek apakah user terlalu sering mencoba login
         $this->ensureIsNotRateLimited();
 
+        //jika email/password salah dihitung sebagai percobaan gagal 
         if (! Auth::attempt($this->only('email', 'password'), $this->boolean('remember'))) {
             RateLimiter::hit($this->throttleKey());
 
@@ -53,10 +60,12 @@ class LoginRequest extends FormRequest
                 'email' => 'Email atau password salah.',
             ]);
         }
-
+        //jika login berhasil, reset hitungan percobaan gagal untuk email tersebut
         RateLimiter::clear($this->throttleKey());
     }
-
+    
+    //membatasi percobaan login maksimal 5 kali
+    //jika melebihi batas akan menunggu beberapa detik 
     public function ensureIsNotRateLimited(): void
     {
         if (! RateLimiter::tooManyAttempts($this->throttleKey(), 5)) {

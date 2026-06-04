@@ -13,10 +13,12 @@ use Illuminate\Validation\ValidationException;
 
 class OrderController extends Controller
 {
+    //menampilkan data pesanan 
     public function index(Request $request)
     {
+        //mengambil data pesanan dari database 
         $query = Order::with(['product', 'user'])->latest();
-
+    
         if ($request->filled('status') && in_array($request->status, ['diproses', 'dikirim', 'selesai', 'ditolak'])) {
             $query->where('status', $request->status);
         }
@@ -53,6 +55,7 @@ class OrderController extends Controller
 
     public function update(Request $request, Order $order)
     {
+        //mengubah status pesanan pada database 
         $validated = $request->validate([
             'status' => 'required|in:diproses,dikirim,selesai,ditolak',
         ], [
@@ -121,6 +124,8 @@ class OrderController extends Controller
     }
     public function liveSearch(Request $request)
     {
+        //validasi input pencarian untuk memastikan data yang diterima sesuai dengan format
+        //menerima data yang dikirim AJAX 
         $validated = $request->validate([
             'keyword' => 'nullable|string|max:100',
             'status' => 'nullable|in:diproses,dikirim,selesai,ditolak',
@@ -129,6 +134,7 @@ class OrderController extends Controller
         $keyword = $validated['keyword'] ?? '';
         $status = $validated['status'] ?? '';
 
+       //query untuk mencari pesanan berdasarkan keyword dan status 
         $orders = Order::query()
             ->when($keyword !== '', function ($query) use ($keyword) {
                 $query->where(function ($q) use ($keyword) {

@@ -10,10 +10,15 @@ use App\Http\Controllers\Customer\FeatureController;
 use App\Models\Product;
 use App\Models\Order;
 
+
+//halaman awal akan diarahkan ke halaman login, jika belum login maka akan diarahkan ke halaman login, 
+//jika sudah login maka akan diarahkan ke dashboard sesuai dengan role masing-masing (admin atau customer)
 Route::get('/', function () {
     return redirect()->route('login');
 });
 
+
+//route dashboard utama untuk mengarahkan user ke dashboard admin atau customer (sesuai dengan role)
 Route::get('/dashboard', function () {
     if (auth()->user()->role === 'admin') {
         return redirect()->route('admin.dashboard');
@@ -22,6 +27,9 @@ Route::get('/dashboard', function () {
     return redirect()->route('customer.dashboard');
 })->middleware(['auth'])->name('dashboard');
 
+
+//route untuk admin, hanya bisa diakses oleh user dengan role admin yang sudah login, 
+//untuk proteksinya menggunakan middleware 'auth' dan 'admin', dengan prefix 'admin' dan nama route 'admin.'
 Route::middleware(['auth', 'admin'])
     ->prefix('admin')
     ->name('admin.')
@@ -39,19 +47,21 @@ Route::middleware(['auth', 'admin'])
             return view('admin.profile');
         })->name('profile');
         Route::post('/products/live-search', [AdminProductController::class, 'liveSearch'])
-            ->name('products.live-search');
-        Route::resource('products', AdminProductController::class);
+            ->name('products.live-search'); //route live search produk untuk fitur pencarion produk secara AJAX (data ditampilkan tanpa reload halaman)
+        Route::resource('products', AdminProductController::class); //route resource untuk produk, dengan method index, create, store, show, edit, update, destroy (menjalankan CRUD produk)
         Route::post('/orders/live-search', [AdminOrderController::class, 'liveSearch'])
-            ->name('orders.live-search');
-        Route::resource('orders', AdminOrderController::class)->only(['index', 'edit', 'update', 'destroy']);
+            ->name('orders.live-search'); //route live search pesanan untuk mencari data pesanan admin secara AJAX 
+        Route::resource('orders', AdminOrderController::class)->only(['index', 'edit', 'update', 'destroy']); //route resource pesanan dibatasi hanya untuk melihat, mengedit status, memperbarui status, dan menghapus pesanan
     });
 
+//route untuk customer, hanya bisa diakses oleh user customer yang sudah login
+//middleware customer untuk mencegah user dengan role admin masuk ke halaman customer 
 Route::middleware(['auth', 'customer'])
     ->prefix('customer')
     ->name('customer.')
     ->group(function () {
         Route::get('/dashboard', [CatalogController::class, 'home'])->name('dashboard');
-        Route::get('/katalog', [CatalogController::class, 'catalog'])->name('catalog');
+        Route::get('/katalog', [CatalogController::class, 'catalog'])->name('catalog'); 
         Route::get('/produk/{product}', [CatalogController::class, 'show'])->name('product.detail');
         Route::get('/beli', [CatalogController::class, 'checkout'])->name('checkout');
         Route::post('/pesanan', [CatalogController::class, 'storeOrder'])->name('orders.store');

@@ -86,7 +86,6 @@ class FeatureController extends Controller
                 'checkout_url' => route('customer.checkout', ['product_id' => $product->id]),
                 ];
             });
-
         return response()->json([
             'success' => true,
             'products' => $products,

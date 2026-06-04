@@ -17,11 +17,13 @@ class CatalogController extends Controller
 public function home()
 {
     $products = Product::latest()->take(3)->get();
-
+    
+    //penerapaan session untuk menyimpan jumlah kunjungan dan riwayat akses customer
     $visitCount = session('customer_visit_count', 0) + 1;
 
     $currentTime = Carbon::now('Asia/Jakarta')->format('d/m/Y H:i:s');
 
+    //penerapan session untuk mencatat kunjungan pertama customer 
     if (! session()->has('customer_first_visit_at')) {
         session([
             'customer_first_visit_at' => $currentTime,
@@ -42,6 +44,7 @@ public function home()
     return view('customer.home', compact('products', 'visitStats'));
 }
 
+    
     public function catalog(Request $request)
     {
         $query = Product::query();
@@ -85,6 +88,7 @@ public function home()
         return view('customer.checkout', compact('selectedProduct'));
     }
 
+    //fungsi untuk menyimpan data pesanan baru ke database, data pesanan akan divalidasi di sisi server
     public function storeOrder(Request $request)
     { 
         $validated = $request->validate([
@@ -117,13 +121,15 @@ public function home()
             'bukti_pembayaran.mimes' => 'Bukti pembayaran harus berformat jpg, jpeg, png, atau webp.',
             'bukti_pembayaran.max' => 'Ukuran bukti pembayaran maksimal 2MB.',
         ]);
-
+        
         $proofPath = $request->file('bukti_pembayaran')
             ->store('payment_proofs', 'public');
-
+        
+        // Menggunakan database transaksi untuk memastikan data konsisten 
+        // jika terjadi error saat menyimpan pesanan atau mengurangi stok produk
         DB::transaction(function () use ($validated, $proofPath) {
             $product = Product::where('id', $validated['product_id'])
-                ->lockForUpdate()
+                ->lockForUpdate() 
                 ->firstOrFail();
 
             if ($validated['jumlah'] > $product->stok) {
@@ -133,7 +139,7 @@ public function home()
             }
 
             $total = $product->harga * $validated['jumlah'];
-
+            // Membuat pesanan baru dengan data yang sudah divalidasi
             Order::create([
                 'user_id' => auth()->id(),
                 'product_id' => $product->id,
@@ -150,7 +156,7 @@ public function home()
                 'bukti_pembayaran' => $proofPath,
                 'status' => 'diproses',
             ]);
-
+            // Mengurangi stok produk setelah pesanan berhasil dibuat
             $product->decrement('stok', $validated['jumlah']);
         });
 
@@ -161,6 +167,7 @@ public function home()
 
     public function history(Request $request)
     {
+        
         $query = Order::where('user_id', auth()->id())->latest();
 
         if ($request->filled('status') && in_array($request->status, ['diproses', 'dikirim', 'selesai', 'ditolak'])) {

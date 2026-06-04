@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Order extends Model
 {
+    // Penerapan Mass Assignment untuk menentukan atribut yang dapat diisi secara otomatis.
     protected $fillable = [
         'user_id',
         'product_id',

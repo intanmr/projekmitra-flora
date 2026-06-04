@@ -9,10 +9,13 @@ use Illuminate\Support\Facades\Storage;
 
 class ProductController extends Controller
 {
+    //menampilkan daftar produk untuk admin,
+    //data dapat difilter berdasarkan keyword pencarian dan kategori (indoor/outdoor)
     public function index(Request $request)
     {
         $query = Product::query();
 
+        //filter pencarian berdasarkan kode barang/nama produk 
         if ($request->filled('search')) {
             $search = $request->search;
 
@@ -22,12 +25,15 @@ class ProductController extends Controller
             });
         }
 
+        //filter kategori hanya menerima pilihan indoor dan outdoor
         if ($request->filled('kategori') && in_array($request->kategori, ['indoor', 'outdoor'])) {
             $query->where('kategori', $request->kategori);
         }
 
+        //pagination digunakan agar data produk tidak ditampilkan terlalu banyak dalam satu halaman.
         $products = $query->latest()->paginate(10)->withQueryString();
 
+        //statistik produk untuk dashboard admin 
         $stats = [
             'indoor' => Product::where('kategori', 'indoor')->count(),
             'outdoor' => Product::where('kategori', 'outdoor')->count(),
@@ -45,6 +51,7 @@ class ProductController extends Controller
         return view('admin.products.create');
     }
 
+    //untuk menyimpan produk baru ke database, data produk akan divalidasi di sisi server,
     public function store(Request $request)
     {
         $validated = $request->validate([
@@ -70,10 +77,12 @@ class ProductController extends Controller
             'gambar.max' => 'Ukuran gambar maksimal 2MB.',
         ]);
 
+        // Jika admin mengunggah gambar, file disimpan ke folder storage/app/public/products.
         if ($request->hasFile('gambar')) {
             $validated['gambar'] = $request->file('gambar')->store('products', 'public');
         }
 
+        // Menambahkan data produk ke dalam database 
         Product::create($validated);
 
         return redirect()
@@ -91,6 +100,7 @@ class ProductController extends Controller
         return view('admin.products.edit', compact('product'));
     }
 
+    //untuk memperbarui data produk yang sudah ada 
     public function update(Request $request, Product $product)
     {
         $validated = $request->validate([
@@ -115,43 +125,53 @@ class ProductController extends Controller
             'gambar.mimes' => 'Gambar harus berformat jpg, jpeg, png, atau webp.',
             'gambar.max' => 'Ukuran gambar maksimal 2MB.',
         ]);
+
+        //jika gambar baru diunggah, maka gambar lama akan dihapus dari storage dan digantikan dengan gambar baru
         if ($request->hasFile('gambar')) {
             if ($product->gambar) {
                 Storage::disk('public')->delete($product->gambar);
             }
-
+            //menyimpan gambar baru ke storage dan memperbarui path gambar di database
             $validated['gambar'] = $request->file('gambar')->store('products', 'public');
         }
 
         $product->update($validated);
 
+        //mengembalikan response dengan pesan sukses setelah produk berhasil diperbarui
         return redirect()
             ->route('admin.products.index')
             ->with('success', 'Produk berhasil diperbarui.');
     }
 
+    //untuk menghapus data produk 
     public function destroy(Product $product)
     {
+        //menghapus gambar produk dari storage
         if ($product->gambar) {
             Storage::disk('public')->delete($product->gambar);
         }
-
+        //menghapus data produk dari database
         $product->delete();
 
+        //mengembalikan response dengan pesan sukses setelah produk berhasil dihapus
         return redirect()
             ->route('admin.products.index')
             ->with('success', 'Produk berhasil dihapus.');
     }
+    
     public function liveSearch(Request $request)
     {
+        //validasi input pencarian untuk memastikan data yang diterima sesuai dengan format 
         $validated = $request->validate([
             'keyword' => 'nullable|string|max:100',
             'kategori' => 'nullable|in:indoor,outdoor',
         ]);
 
+
         $keyword = $validated['keyword'] ?? '';
         $kategori = $validated['kategori'] ?? '';
 
+        //query untuk mencari produk berdasarkan keyword dan kategori
         $products = Product::query()
             ->when($keyword !== '', function ($query) use ($keyword) {
                 $query->where(function ($q) use ($keyword) {
@@ -167,7 +187,8 @@ class ProductController extends Controller
             ->get()
             ->map(function ($product) {
                 $status = $product->status;
-
+    
+                //format data produk untuk ditampilkan di frontend, termasuk format harga dan tanggal masuk
                 return [
                     'id' => $product->id,
                     'kode_barang' => $product->kode_barang,
@@ -187,6 +208,7 @@ class ProductController extends Controller
                 ];
             });
 
+        //penerapan AJAX dan JSON untuk menampilkan hasil pencarian tanpa reload halaman 
         return response()->json([
             'success' => true,
             'products' => $products,

@@ -7,6 +7,7 @@ use App\Models\Product;
 
 class Product extends Model
 {
+    //menentukan kolom yang boleh disimpan 
     protected $fillable = [
         'kode_barang',
         'nama_produk',

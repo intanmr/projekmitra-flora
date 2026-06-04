@@ -14,13 +14,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
         fields.forEach((field) => {
             prepareFeedbackElement(field);
-
+            // Menentukan event yang tepat untuk validasi, misalnya 'change' untuk file dan select
             const eventName = field.type === 'file' || field.tagName === 'SELECT'
-                ? 'change'
-                : 'input';
+                ? 'change' //untuk file dan select, karena nilai berubah saat memilih file atau opsi
+                : 'input'; //untuk input teks, textarea, dan lainnya, validasi saat mengetik
 
-            field.addEventListener(eventName, () => validateField(field));
-            field.addEventListener('blur', () => validateField(field));
+            field.addEventListener(eventName, () => validateField(field)); 
+            field.addEventListener('blur', () => validateField(field)); 
         });
 
         form.addEventListener('submit', (event) => {
@@ -60,6 +60,7 @@ function prepareFeedbackElement(field) {
     const existing = getFeedbackElement(field);
     if (existing) return existing;
 
+    //membuat elemen pesan error menggunakan DOM, dengan tag <small> dan class .js-field-error
     const feedback = document.createElement('small');
     feedback.className = 'js-field-error';
     feedback.setAttribute('aria-live', 'polite');
@@ -221,7 +222,7 @@ function getValidationMessage(field) {
 
     return '';
 }
-
+// Fungsi untuk menandai field sebagai valid atau tidak valid, dan menampilkan pesan error jika ada
 function setInvalid(field, message) {
     field.classList.add('is-invalid');
     field.classList.remove('is-valid');

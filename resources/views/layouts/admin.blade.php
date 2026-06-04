@@ -160,11 +160,13 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', function () {
+            // Penerapan DOM Selection untuk mengambil elemen menu mobile.
             const adminMenuButton = document.getElementById('adminMenuButton');
             const adminMobileMenu = document.getElementById('adminMobileMenu');
 
             if (adminMenuButton && adminMobileMenu) {
                 adminMenuButton.addEventListener('click', function () {
+                    // Penerapan DOM Manipulation untuk menampilkan atau menyembunyikan menu mobile.
                     adminMobileMenu.classList.toggle('show');
                 });
             }
