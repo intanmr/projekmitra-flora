@@ -24,7 +24,8 @@
             </p>
         </div>
 
-        <form method="POST" action="{{ route('register') }}" class="space-y-5">
+        <form method="POST" action="{{ route('register') }}" class="space-y-5"       data-validate-form
+      novalidate>
             @csrf
 
             <div>
@@ -39,6 +40,14 @@
                     value="{{ old('name') }}"
                     placeholder="Masukkan nama lengkap"
                     class="w-full rounded-xl border-slate-300 focus:border-green-700 focus:ring-green-700"
+                    required
+                    minlength="3"
+                    maxlength="255"
+                    data-label="Nama lengkap"
+                    data-msg-required="Nama lengkap wajib diisi."
+                    data-msg-minlength="Nama minimal 3 karakter agar data akun jelas."
+                    autocomplete="name"
+
                     autofocus
                 >
 
@@ -61,6 +70,14 @@
                     value="{{ old('email') }}"
                     placeholder="contoh@gmail.com"
                     class="w-full rounded-xl border-slate-300 focus:border-green-700 focus:ring-green-700"
+                    required
+                    maxlength="255"
+                    data-label="Email Gmail"
+                    data-gmail="true"
+                    data-msg-required="Email wajib diisi."
+                    data-msg-email="Format email belum benar. Contoh: nama@gmail.com."
+                    data-msg-gmail="Registrasi hanya menerima email @gmail.com."
+                    autocomplete="username"
                 >
 
                 @error('email')
@@ -81,6 +98,12 @@
                     name="password"
                     placeholder="Minimal 8 karakter"
                     class="w-full rounded-xl border-slate-300 focus:border-green-700 focus:ring-green-700"
+                    required
+                    minlength="8"
+                    data-label="Password"
+                    data-msg-required="Password wajib diisi."
+                    data-msg-minlength="Password minimal 8 karakter."
+                    autocomplete="new-password"
                 >
 
                 @error('password')
@@ -101,6 +124,14 @@
                     name="password_confirmation"
                     placeholder="Ulangi password"
                     class="w-full rounded-xl border-slate-300 focus:border-green-700 focus:ring-green-700"
+                    required
+                    minlength="8"
+                    data-label="Konfirmasi password"
+                    data-match="#password"
+                    data-msg-required="Konfirmasi password wajib diisi."
+                    data-msg-minlength="Konfirmasi password minimal 8 karakter."
+                    data-msg-match="Konfirmasi password harus sama dengan password."
+                    autocomplete="new-password"
                 >
 
                 @error('password_confirmation')

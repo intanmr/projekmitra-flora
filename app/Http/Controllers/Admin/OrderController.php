@@ -4,8 +4,12 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Order;
+use App\Models\Product;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Validation\ValidationException;
+
 
 class OrderController extends Controller
 {
@@ -55,8 +59,36 @@ class OrderController extends Controller
             'status.required' => 'Status pesanan tidak boleh kosong.',
             'status.in' => 'Status pesanan tidak valid.',
         ]);
+        DB::transaction(function () use ($order, $validated) {
+            $statusLama = $order->status;
+            $statusBaru = $validated['status'];
 
-        $order->update($validated);
+            if ($statusLama !== $statusBaru && $order->product_id) {
+                $product = Product::where('id', $order->product_id)
+                    ->lockForUpdate()
+                    ->first();
+
+                if ($product) {
+                    if ($statusLama !== 'ditolak' && $statusBaru === 'ditolak') {
+                        $product->increment('stok', $order->jumlah);
+                    }
+
+                    if ($statusLama === 'ditolak' && $statusBaru !== 'ditolak') {
+                        if ($product->stok < $order->jumlah) {
+                            throw ValidationException::withMessages([
+                                'status' => 'Stok produk tidak cukup untuk mengaktifkan kembali pesanan ini.',
+                            ]);
+                        }
+
+                        $product->decrement('stok', $order->jumlah);
+                    }
+                }
+            }
+
+            $order->update([
+                'status' => $statusBaru,
+            ]);
+        });
 
         return redirect()
             ->route('admin.orders.index')
@@ -65,15 +97,27 @@ class OrderController extends Controller
 
     public function destroy(Order $order)
     {
-        if ($order->bukti_pembayaran) {
-            Storage::disk('public')->delete($order->bukti_pembayaran);
-        }
+        DB::transaction(function () use ($order) {
+            if (in_array($order->status, ['diproses', 'dikirim']) && $order->product_id) {
+                $product = Product::where('id', $order->product_id)
+                    ->lockForUpdate()
+                    ->first();
 
-        $order->delete();
+                if ($product) {
+                    $product->increment('stok', $order->jumlah);
+                }
+            }
+
+            if ($order->bukti_pembayaran) {
+                Storage::disk('public')->delete($order->bukti_pembayaran);
+            }
+
+            $order->delete();
+        });
 
         return redirect()
             ->route('admin.orders.index')
-            ->with('success', 'Pesanan berhasil dihapus.');
+            ->with('success', 'Pesanan berhasil dihapus dan stok dikembalikan jika pesanan belum selesai.');
     }
     public function liveSearch(Request $request)
     {

@@ -46,7 +46,7 @@ Route::middleware(['auth', 'admin'])
         Route::resource('orders', AdminOrderController::class)->only(['index', 'edit', 'update', 'destroy']);
     });
 
-Route::middleware(['auth'])
+Route::middleware(['auth', 'customer'])
     ->prefix('customer')
     ->name('customer.')
     ->group(function () {

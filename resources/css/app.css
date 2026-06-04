@@ -2949,3 +2949,48 @@
     }
 }
 
+.is-invalid {
+    border-color: #dc2626 !important;
+    box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.14) !important;
+    outline: none !important;
+}
+
+.is-valid {
+    border-color: #16a34a !important;
+    box-shadow: 0 0 0 3px rgba(22, 163, 74, 0.12) !important;
+    outline: none !important;
+}
+
+.js-field-error {
+    display: block;
+    margin-top: 6px;
+    color: #dc2626;
+    font-size: 13px;
+    font-weight: 700;
+    line-height: 1.35;
+}
+
+.js-field-error[hidden] {
+    display: none;
+}
+
+.js-form-alert {
+    margin-bottom: 16px;
+    padding: 12px 14px;
+    border-radius: 14px;
+    border: 1px solid #fecaca;
+    background: #fef2f2;
+    color: #991b1b;
+    font-size: 14px;
+    font-weight: 800;
+}
+
+.js-form-alert[hidden] {
+    display: none;
+}
+
+.dark .js-form-alert {
+    border-color: #7f1d1d;
+    background: #450a0a;
+    color: #fecaca;
+}

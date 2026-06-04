@@ -14,7 +14,9 @@
 
     <form method="POST"
           action="{{ route('admin.products.store') }}"
-          enctype="multipart/form-data">
+          enctype="multipart/form-data"
+          data-validate-form
+          novalidate>
         @csrf
 
         @include('admin.products.form', ['product' => null])

@@ -30,7 +30,8 @@
             </div>
         @endif
 
-        <form method="POST" action="{{ route('login') }}" class="space-y-5">
+        <form method="POST" action="{{ route('login') }}" class="space-y-5" 
+        data-validate-form novalidate>
             @csrf
 
             <div>
@@ -45,6 +46,13 @@
                     value="{{ old('email') }}"
                     placeholder="contoh@gmail.com"
                     class="w-full rounded-xl border-slate-300 focus:border-green-700 focus:ring-green-700"
+                    required
+                    data-label="Email Gmail"
+                    data-gmail="true"
+                    data-msg-required="Email wajib diisi sebelum login."
+                    data-msg-email="Format email belum benar. Contoh: nama@gmail.com."
+                    data-msg-gmail="Email login wajib menggunakan @gmail.com."
+                    autocomplete="username"
                     autofocus
                 >
 
@@ -60,12 +68,19 @@
                     Password
                 </label>
 
+
                 <input
                     id="password"
                     type="password"
                     name="password"
                     placeholder="Minimal 8 karakter"
                     class="w-full rounded-xl border-slate-300 focus:border-green-700 focus:ring-green-700"
+                    required
+                    minlength="8"
+                    data-label="Password"
+                    data-msg-required="Password wajib diisi sebelum login."
+                    data-msg-minlength="Password minimal 8 karakter."
+                    autocomplete="current-password"
                 >
 
                 @error('password')

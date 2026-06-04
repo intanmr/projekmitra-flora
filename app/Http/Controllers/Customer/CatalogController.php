@@ -86,14 +86,14 @@ public function home()
     }
 
     public function storeOrder(Request $request)
-    {
+    { 
         $validated = $request->validate([
             'product_id' => 'required|exists:products,id',
             'jumlah' => 'required|integer|min:1',
             'nama_customer' => 'required|string|max:100',
             'alamat' => 'required|string',
             'email' => 'required|email|ends_with:@gmail.com',
-            'whatsapp' => 'nullable|string|max:20',
+            'whatsapp' => 'required|regex:/^08[0-9]{8,13}$/|max:15',
             'metode_pembayaran' => 'required|string|max:50',
             'catatan' => 'nullable|string',
             'bukti_pembayaran' => 'required|image|mimes:jpg,jpeg,png,webp|max:2048',
@@ -108,6 +108,9 @@ public function home()
             'email.required' => 'Email tidak boleh kosong.',
             'email.email' => 'Format email tidak valid.',
             'email.ends_with' => 'Email harus menggunakan @gmail.com.',
+            'whatsapp.required' => 'Nomor WhatsApp wajib diisi.',
+            'whatsapp.regex' => 'Nomor WhatsApp harus diawali 08 dan terdiri dari 10-15 digit angka.',
+            'whatsapp.max' => 'Nomor WhatsApp tidak boleh lebih dari 15 digit.',
             'metode_pembayaran.required' => 'Metode pembayaran tidak boleh kosong.',
             'bukti_pembayaran.required' => 'Bukti pembayaran wajib diupload.',
             'bukti_pembayaran.image' => 'File bukti pembayaran harus berupa gambar.',

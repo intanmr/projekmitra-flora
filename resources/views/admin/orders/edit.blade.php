@@ -115,7 +115,9 @@
         @endif
     </div>
 
-    <form method="POST" action="{{ route('admin.orders.update', $order) }}">
+    <form method="POST" action="{{ route('admin.orders.update', $order) }}"
+            data-validate-form
+            novalidate>
         @csrf
         @method('PUT')
 
@@ -124,7 +126,10 @@
                 Status Pesanan *
             </label>
 
-            <select name="status" class="mf-select">
+            <select name="status" class="mf-select"
+                    required
+                    data-label="Status pesanan"
+                    data-msg-required="Status pesanan wajib dipilih sebelum disimpan.">
                 <option value="">-- Pilih Status --</option>
 
                 <option value="diproses" @selected(old('status', $order->status) === 'diproses')>

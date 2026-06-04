@@ -53,7 +53,9 @@
 
     <form method="POST"
           action="{{ route('customer.orders.store') }}"
-          enctype="multipart/form-data">
+          enctype="multipart/form-data"
+          data-validate-form
+          novalidate>
         @csrf
 
         {{-- PRODUCT ID DIKUNCI SESUAI TOMBOL BELI --}}
@@ -99,7 +101,14 @@
                        name="nama_customer"
                        value="{{ old('nama_customer', auth()->user()->name ?? '') }}"
                        class="cf-input"
-                       placeholder="Masukkan nama customer">
+                       placeholder="Masukkan nama customer"
+                        required
+                        minlength="3"
+                        maxlength="100"
+                        data-label="Nama customer"
+                        data-msg-required="Nama customer wajib diisi."
+                        data-msg-minlength="Nama customer minimal 3 karakter."
+                        data-msg-maxlength="Nama customer maksimal 100 karakter.">
 
                 @error('nama_customer')
                     <div class="cf-error">{{ $message }}</div>
@@ -115,7 +124,15 @@
                        name="email"
                        value="{{ old('email', auth()->user()->email ?? '') }}"
                        class="cf-input"
-                       placeholder="contoh@gmail.com">
+                       placeholder="contoh@gmail.com"
+                        required
+                        maxlength="255"
+                        data-label="Email Gmail"
+                        data-gmail="true"
+                        data-msg-required="Email wajib diisi."
+                        data-msg-email="Format email belum benar. Contoh: nama@gmail.com."
+                        data-msg-gmail="Email pesanan wajib menggunakan @gmail.com."
+                       >
 
                 @error('email')
                     <div class="cf-error">{{ $message }}</div>
@@ -131,7 +148,11 @@
                        name="whatsapp"
                        value="{{ old('whatsapp') }}"
                        class="cf-input"
-                       placeholder="Contoh: 08123456789">
+                       placeholder="Contoh: 08123456789"
+                       pattern="^08[0-9]{8,13}$"
+                        maxlength="15"
+                        data-label="Nomor WhatsApp"
+                        data-msg-pattern="Nomor WhatsApp harus diawali 08 dan terdiri dari 10-15 digit angka.">
 
                 @error('whatsapp')
                     <div class="cf-error">{{ $message }}</div>
@@ -150,7 +171,13 @@
                        max="{{ $chosenProduct->stok }}"
                        value="{{ old('jumlah', 1) }}"
                        class="cf-input"
-                       placeholder="Masukkan jumlah">
+                       placeholder="Masukkan jumlah"
+                        required
+                        data-label="Jumlah pembelian"
+                        data-msg-required="Jumlah pembelian wajib diisi."
+                        data-msg-min="Jumlah minimal pembelian adalah 1 pcs."
+                        data-msg-max="Jumlah pembelian tidak boleh melebihi stok tersedia"
+                       >
 
                 <p id="stokInfo" class="cf-small-text" style="margin-top:6px;">
                     Stok tersedia: {{ $chosenProduct->stok }} pcs
@@ -167,7 +194,10 @@
                 </label>
 
                 <select name="metode_pembayaran"
-                        class="cf-select">
+                        class="cf-select"
+                        required
+                        data-label="Metode pembayaran"
+                        data-msg-required="Metode pembayaran wajib dipilih.">
                     <option value="">-- Pilih Metode Pembayaran --</option>
 
                     <option value="Transfer BCA" @selected(old('metode_pembayaran') === 'Transfer BCA')>
@@ -208,7 +238,11 @@
 
             <textarea name="alamat"
                       class="cf-textarea"
-                      placeholder="Masukkan alamat lengkap pengiriman">{{ old('alamat') }}</textarea>
+                      placeholder="Masukkan alamat lengkap pengiriman"
+                    required
+                    minlength="10"
+                    data-label="Alamat pengiriman"
+                    data-msg-required="Alamat pengiriman wajib diisi.">{{ old('alamat') }}</textarea>
 
             @error('alamat')
                 <div class="cf-error">{{ $message }}</div>
@@ -222,6 +256,9 @@
 
             <textarea name="catatan"
                       class="cf-textarea"
+                    maxlength="255"
+                    data-label="Catatan customer"
+                    data-msg-maxlength="Catatan maksimal 255 karakter."
                       placeholder="Tambahkan catatan jika diperlukan">{{ old('catatan') }}</textarea>
 
             @error('catatan')
@@ -236,11 +273,17 @@
 
             <input type="file"
                    name="bukti_pembayaran"
-                   accept="image/*"
-                   class="cf-file">
+                accept="image/jpeg,image/png,image/webp"
+                class="cf-file"
+                required
+                data-label="Bukti pembayaran"
+                data-max-size="2"
+                data-msg-required="Bukti pembayaran wajib diunggah."
+                data-msg-file-type="Bukti pembayaran harus berformat JPG, JPEG, PNG, atau WEBP."
+                data-msg-file-size="Ukuran bukti pembayaran maksimal 2MB.">
 
             <p class="cf-small-text" style="margin-top:6px;">
-                Unggah bukti pembayaran.
+                Unggah bukti pembayaran dengan format JPG, JPEG, PNG, atau WEBP. Ukuran maksimal 2MB.
             </p>
 
             @error('bukti_pembayaran')
@@ -288,7 +331,6 @@
 
         if (isNaN(jumlah) || jumlah < 1) {
             totalHargaDisplay.value = formatRupiah(0);
-            stokInfo.textContent = 'Jumlah minimal pembelian adalah 1 pcs';
             stokInfo.style.color = '#dc2626';
             stokInfo.style.fontWeight = '800';
             return;
@@ -300,7 +342,7 @@
         totalHargaDisplay.value = formatRupiah(total);
 
         if (jumlah > selectedProduct.stok) {
-            stokInfo.textContent = 'Jumlah melebihi stok tersedia: ' + selectedProduct.stok + ' pcs';
+           
             stokInfo.style.color = '#dc2626';
             stokInfo.style.fontWeight = '800';
         } else {

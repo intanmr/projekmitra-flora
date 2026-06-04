@@ -34,7 +34,7 @@ return new class extends Migration
             $table->text('catatan')->nullable();
             $table->string('bukti_pembayaran');
 
-            $table->enum('status', ['diproses', 'dikirim', 'selesai'])
+            $table->enum('status', ['diproses', 'dikirim', 'selesai', 'ditolak'])
                 ->default('diproses');
 
             $table->timestamps();
