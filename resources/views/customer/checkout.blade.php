@@ -149,10 +149,11 @@
                        value="{{ old('whatsapp') }}"
                        class="cf-input"
                        placeholder="Contoh: 08123456789"
+                       required
                        pattern="^08[0-9]{8,13}$"
-                        maxlength="15"
-                        data-label="Nomor WhatsApp"
-                        data-msg-pattern="Nomor WhatsApp harus diawali 08 dan terdiri dari 10-15 digit angka.">
+                       maxlength="15"
+                       data-label="Nomor WhatsApp"
+                       data-msg-pattern="Nomor WhatsApp harus diawali 08 dan terdiri dari 10-15 digit angka.">
 
                 @error('whatsapp')
                     <div class="cf-error">{{ $message }}</div>
@@ -172,12 +173,11 @@
                        value="{{ old('jumlah', 1) }}"
                        class="cf-input"
                        placeholder="Masukkan jumlah"
-                        required
-                        data-label="Jumlah pembelian"
-                        data-msg-required="Jumlah pembelian wajib diisi."
-                        data-msg-min="Jumlah minimal pembelian adalah 1 pcs."
-                        data-msg-max="Jumlah pembelian tidak boleh melebihi stok tersedia"
-                       >
+                       required
+                       data-label="Jumlah pembelian"
+                       data-msg-required="Jumlah pembelian wajib diisi."
+                       data-msg-min="Jumlah minimal pembelian adalah 1 pcs."
+                       data-msg-max="Jumlah pembelian tidak boleh melebihi stok tersedia">
 
                 <p id="stokInfo" class="cf-small-text" style="margin-top:6px;">
                     Stok tersedia: {{ $chosenProduct->stok }} pcs
