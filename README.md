@@ -139,9 +139,15 @@ Dibawah ini adalah panduan instalasi dan cara untuk menjalankan website MitraFlo
     
 24. Menjalankan Server Laravel
     
-    Selanjutnya buka Command Promt baru dengan perintah cd C:\laragon\www\tugas-pweb\projekmitra
-    flora
-    dan lanjutkan dengan perintah php artisan serve lalu buka alamat tersebut pada browser
+    Selanjutnya buka Command Promt baru dengan perintah :
+
+    cd C:\laragon\www\tugas-pweb\projekmitra-flora
+    
+    dan lanjutkan dengan perintah :
+
+    php artisan serve
+
+    lalu buka alamat tersebut pada browser
 
 
 26. Membuka Website di Browser
